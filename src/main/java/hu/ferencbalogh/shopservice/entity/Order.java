@@ -1,29 +1,29 @@
 package hu.ferencbalogh.shopservice.entity;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
 public class Order {
-    private int id;
+    private Integer id;
     private String buyerEmail;
-    private Date orderTime;
+    private ZonedDateTime orderTime;
     private List<OrderItem> items;
 
     public Order() {
     }
 
-    public Order(String buyerEmail, Date orderTime, List<OrderItem> items) {
+    public Order(String buyerEmail, ZonedDateTime orderTime, List<OrderItem> items) {
         this.buyerEmail = buyerEmail;
         this.orderTime = orderTime;
         this.items = items;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -35,11 +35,11 @@ public class Order {
         this.buyerEmail = buyerEmail;
     }
 
-    public Date getOrderTime() {
+    public ZonedDateTime getOrderTime() {
         return orderTime;
     }
 
-    public void setOrderTime(Date orderTime) {
+    public void setOrderTime(ZonedDateTime orderTime) {
         this.orderTime = orderTime;
     }
 
@@ -56,7 +56,7 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return id == order.id &&
+        return Objects.equals(id, order.id) &&
                 Objects.equals(buyerEmail, order.buyerEmail) &&
                 Objects.equals(orderTime, order.orderTime) &&
                 Objects.equals(items, order.items);

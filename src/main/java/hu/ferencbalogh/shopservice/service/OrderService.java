@@ -2,7 +2,7 @@ package hu.ferencbalogh.shopservice.service;
 
 import hu.ferencbalogh.shopservice.entity.Order;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface OrderService {
@@ -10,5 +10,5 @@ public interface OrderService {
 
     void recalculate(Order order);
 
-    List<Order> list(Date from, Date to);
+    List<Order> list(ZonedDateTime from, ZonedDateTime to);
 }

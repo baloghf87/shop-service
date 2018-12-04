@@ -4,12 +4,18 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class OrderItem {
-    private int id;
+    private Integer id;
     private Product product;
     private BigDecimal unitPrice;
-    private int quantity;
+    private Integer quantity;
 
     public OrderItem() {
+    }
+
+    public OrderItem(Product product, int quantity) {
+        this.product = product;
+        this.unitPrice = product.getPrice();
+        this.quantity = quantity;
     }
 
     public OrderItem(Product product, BigDecimal unitPrice, int quantity) {
@@ -18,11 +24,11 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -42,11 +48,11 @@ public class OrderItem {
         this.unitPrice = unitPrice;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -55,8 +61,8 @@ public class OrderItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return id == orderItem.id &&
-                quantity == orderItem.quantity &&
+        return quantity == orderItem.quantity &&
+                Objects.equals(id, orderItem.id) &&
                 Objects.equals(product, orderItem.product) &&
                 Objects.equals(unitPrice, orderItem.unitPrice);
     }
