@@ -6,9 +6,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface OrderService {
-    void add(Order order);
+    Order add(Order order);
 
-    void recalculate(Order order);
+    Order recalculate(Order order);
 
     List<Order> list(ZonedDateTime from, ZonedDateTime to);
 }

@@ -5,9 +5,7 @@ import hu.ferencbalogh.shopservice.entity.Product;
 import java.util.List;
 
 public interface ProductService {
-    void add(Product product);
+    Product save(Product product);
 
     List<Product> list();
-
-    void update(Product product);
 }

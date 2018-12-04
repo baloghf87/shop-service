@@ -1,13 +1,29 @@
 package hu.ferencbalogh.shopservice.entity;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity
 public class OrderItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
+    @NotNull
+    @ManyToOne
     private Product product;
+
+    @NotNull
     private BigDecimal unitPrice;
+
+    @NotNull
     private Integer quantity;
+
+    @ManyToOne
+    @NotNull
+    private Order order;
 
     public OrderItem() {
     }
@@ -15,12 +31,6 @@ public class OrderItem {
     public OrderItem(Product product, int quantity) {
         this.product = product;
         this.unitPrice = product.getPrice();
-        this.quantity = quantity;
-    }
-
-    public OrderItem(Product product, BigDecimal unitPrice, int quantity) {
-        this.product = product;
-        this.unitPrice = unitPrice;
         this.quantity = quantity;
     }
 
@@ -56,15 +66,23 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return quantity == orderItem.quantity &&
-                Objects.equals(id, orderItem.id) &&
+        return Objects.equals(id, orderItem.id) &&
                 Objects.equals(product, orderItem.product) &&
-                Objects.equals(unitPrice, orderItem.unitPrice);
+                Objects.equals(unitPrice, orderItem.unitPrice) &&
+                Objects.equals(quantity, orderItem.quantity);
     }
 
     @Override

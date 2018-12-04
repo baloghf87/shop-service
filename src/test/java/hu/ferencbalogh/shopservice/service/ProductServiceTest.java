@@ -2,6 +2,7 @@ package hu.ferencbalogh.shopservice.service;
 
 import hu.ferencbalogh.shopservice.entity.Product;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import static org.junit.Assert.*;
 
 public abstract class ProductServiceTest {
 
+    @Autowired
     private ProductService productService;
 
     @Test
@@ -19,8 +21,8 @@ public abstract class ProductServiceTest {
         assertTrue(productService.list().isEmpty());
 
         //when
-        Product product = new Product("Test product", new BigDecimal(12.345));
-        productService.add(product);
+        Product product = new Product("Test product", new BigDecimal("12.34"));
+        productService.save(product);
 
         //then
         assertNotNull(product.getId());
@@ -31,12 +33,12 @@ public abstract class ProductServiceTest {
     public void shouldListProducts() {
         //given
         assertTrue(productService.list().isEmpty());
-        Product product1 = new Product("Test product 1", new BigDecimal(12.345));
-        Product product2 = new Product("Test product 2", new BigDecimal(234.56));
+        Product product1 = new Product("Test product 1", new BigDecimal("12.34"));
+        Product product2 = new Product("Test product 2", new BigDecimal("234.56"));
 
         //when
         List<Product> products = Arrays.asList(product1, product2);
-        products.forEach(productService::add);
+        products.forEach(productService::save);
 
         //then
         List<Product> actualProducts = productService.list();
@@ -48,18 +50,18 @@ public abstract class ProductServiceTest {
         //given
         assertTrue(productService.list().isEmpty());
 
-        Product product1 = new Product("Test product 1", new BigDecimal(12.345));
-        Product product2 = new Product("Test product 2", new BigDecimal(234.56));
+        Product product1 = new Product("Test product 1", new BigDecimal("12.34"));
+        Product product2 = new Product("Test product 2", new BigDecimal("234.56"));
         List<Product> products = Arrays.asList(product1, product2);
-        products.forEach(productService::add);
+        products.forEach(productService::save);
 
         List<Product> actualProducts = productService.list();
         assertEquals(products, actualProducts);
 
         //when
         product2.setName("Test product II");
-        product2.setPrice(new BigDecimal(345.67));
-        productService.update(product2);
+        product2.setPrice(new BigDecimal("345.67"));
+        productService.save(product2);
 
         //then
         actualProducts = productService.list();

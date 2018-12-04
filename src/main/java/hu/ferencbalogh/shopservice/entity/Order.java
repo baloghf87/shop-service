@@ -1,13 +1,28 @@
 package hu.ferencbalogh.shopservice.entity;
 
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "orders")
 public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
+    @NotNull
+    @Email
     private String buyerEmail;
+
+    @NotNull
     private ZonedDateTime orderTime;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItem> items;
 
     public Order() {
@@ -16,7 +31,7 @@ public class Order {
     public Order(String buyerEmail, ZonedDateTime orderTime, List<OrderItem> items) {
         this.buyerEmail = buyerEmail;
         this.orderTime = orderTime;
-        this.items = items;
+        setItems(items);
     }
 
     public Integer getId() {
@@ -49,6 +64,7 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+        items.forEach(item -> item.setOrder(this));
     }
 
     @Override
@@ -59,7 +75,7 @@ public class Order {
         return Objects.equals(id, order.id) &&
                 Objects.equals(buyerEmail, order.buyerEmail) &&
                 Objects.equals(orderTime, order.orderTime) &&
-                Objects.equals(items, order.items);
+                Objects.equals(new ArrayList<>(items), new ArrayList<>(order.items));
     }
 
     @Override
