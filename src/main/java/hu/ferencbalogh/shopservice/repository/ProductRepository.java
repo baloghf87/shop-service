@@ -1,4 +1,4 @@
-package hu.ferencbalogh.shopservice.database;
+package hu.ferencbalogh.shopservice.repository;
 
 import hu.ferencbalogh.shopservice.entity.Product;
 import org.springframework.data.repository.CrudRepository;

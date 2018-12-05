@@ -58,7 +58,7 @@ public abstract class OrderServiceTest {
         assertTrue(orderService.list(null, null).isEmpty());
 
         //when
-        PRODUCTS.forEach(productService::save);
+        PRODUCTS.forEach(productService::create);
         orderService.add(ORDER_1);
 
         //then
@@ -78,14 +78,14 @@ public abstract class OrderServiceTest {
         assertTrue(productService.list().isEmpty());
         assertTrue(orderService.list(null, null).isEmpty());
 
-        PRODUCTS.forEach(productService::save);
+        PRODUCTS.forEach(productService::create);
         orderService.add(ORDER_1);
         assertEquals(new LinkedList<>(Arrays.asList(ORDER_1)), orderService.list(null, null));
 
         //when
         PRODUCTS.forEach(product -> {
             product.setPrice(product.getPrice().multiply(new BigDecimal("2")));
-            productService.save(product);
+            productService.update(product);
         });
 
         //then
@@ -98,7 +98,7 @@ public abstract class OrderServiceTest {
         assertTrue(productService.list().isEmpty());
         assertTrue(orderService.list(null, null).isEmpty());
 
-        PRODUCTS.forEach(productService::save);
+        PRODUCTS.forEach(productService::create);
         orderService.add(ORDER_1);
 
         assertEquals(Arrays.asList(ORDER_1), orderService.list(null, null));
@@ -107,7 +107,7 @@ public abstract class OrderServiceTest {
         BigDecimal multiplier = new BigDecimal("3");
         PRODUCTS.forEach(product -> {
             product.setPrice(product.getPrice().multiply(multiplier));
-            productService.save(product);
+            productService.update(product);
         });
 
         ORDER_1.getItems().forEach(orderItem -> {
@@ -115,7 +115,8 @@ public abstract class OrderServiceTest {
         });
 
         assertNotEquals(Arrays.asList(ORDER_1), orderService.list(null, null));
-        orderService.recalculate(ORDER_1);
+        orderService.recalculate(ORDER_1.getId());
+        ORDER_1.calculateTotal();
 
         //then
         assertEquals(Arrays.asList(ORDER_1), orderService.list(null, null));
@@ -128,7 +129,7 @@ public abstract class OrderServiceTest {
         assertTrue(orderService.list(null, null).isEmpty());
 
         //when
-        PRODUCTS.forEach(productService::save);
+        PRODUCTS.forEach(productService::create);
         ORDERS.forEach(orderService::add);
 
         //then
@@ -155,7 +156,7 @@ public abstract class OrderServiceTest {
         assertTrue(orderService.list(null, null).isEmpty());
 
         //when
-        PRODUCTS.forEach(productService::save);
+        PRODUCTS.forEach(productService::create);
         ORDERS.forEach(orderService::add);
 
         //then
@@ -170,7 +171,7 @@ public abstract class OrderServiceTest {
         assertTrue(orderService.list(null, null).isEmpty());
 
         //when
-        PRODUCTS.forEach(productService::save);
+        PRODUCTS.forEach(productService::create);
         ORDERS.forEach(orderService::add);
 
         //then
@@ -190,7 +191,7 @@ public abstract class OrderServiceTest {
         assertTrue(orderService.list(null, null).isEmpty());
 
         //when
-        PRODUCTS.forEach(productService::save);
+        PRODUCTS.forEach(productService::create);
         ORDERS.forEach(orderService::add);
 
         //then

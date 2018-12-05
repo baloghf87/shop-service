@@ -1,6 +1,6 @@
 package hu.ferencbalogh.shopservice.service.impl;
 
-import hu.ferencbalogh.shopservice.database.ProductRepository;
+import hu.ferencbalogh.shopservice.repository.ProductRepository;
 import hu.ferencbalogh.shopservice.entity.Product;
 import hu.ferencbalogh.shopservice.service.ProductServiceTest;
 import org.junit.runner.RunWith;

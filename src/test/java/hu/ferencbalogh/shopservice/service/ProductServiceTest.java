@@ -16,13 +16,13 @@ public abstract class ProductServiceTest {
     private ProductService productService;
 
     @Test
-    public void shouldAddProduct() {
+    public void shouldCreateProduct() {
         //given
         assertTrue(productService.list().isEmpty());
 
         //when
         Product product = new Product("Test product", new BigDecimal("12.34"));
-        productService.save(product);
+        productService.create(product);
 
         //then
         assertNotNull(product.getId());
@@ -38,7 +38,7 @@ public abstract class ProductServiceTest {
 
         //when
         List<Product> products = Arrays.asList(product1, product2);
-        products.forEach(productService::save);
+        products.forEach(productService::create);
 
         //then
         List<Product> actualProducts = productService.list();
@@ -53,7 +53,7 @@ public abstract class ProductServiceTest {
         Product product1 = new Product("Test product 1", new BigDecimal("12.34"));
         Product product2 = new Product("Test product 2", new BigDecimal("234.56"));
         List<Product> products = Arrays.asList(product1, product2);
-        products.forEach(productService::save);
+        products.forEach(productService::create);
 
         List<Product> actualProducts = productService.list();
         assertEquals(products, actualProducts);
@@ -61,7 +61,7 @@ public abstract class ProductServiceTest {
         //when
         product2.setName("Test product II");
         product2.setPrice(new BigDecimal("345.67"));
-        productService.save(product2);
+        productService.update(product2);
 
         //then
         actualProducts = productService.list();

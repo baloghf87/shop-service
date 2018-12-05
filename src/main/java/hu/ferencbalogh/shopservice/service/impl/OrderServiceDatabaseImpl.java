@@ -1,12 +1,8 @@
 package hu.ferencbalogh.shopservice.service.impl;
 
 import hu.ferencbalogh.shopservice.Util;
-import hu.ferencbalogh.shopservice.database.OrderRepository;
-import hu.ferencbalogh.shopservice.database.ProductRepository;
-import hu.ferencbalogh.shopservice.entity.Order;
-import hu.ferencbalogh.shopservice.entity.OrderItem;
-import hu.ferencbalogh.shopservice.entity.Product;
-import hu.ferencbalogh.shopservice.service.OrderService;
+import hu.ferencbalogh.shopservice.entity.*;
+import hu.ferencbalogh.shopservice.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,32 +11,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class OrderServiceDatabaseImpl implements OrderService {
+public class OrderServiceDatabaseImpl extends AbstractOrderService {
 
     @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
 
     @Override
-    public Order add(Order order) {
-        return orderRepository.save(order);
+    protected Optional<Order> getById(int id) {
+        return orderRepository.findById(id);
     }
 
     @Override
-    public Order recalculate(Order order) {
-        order.getItems().forEach(this::updatePrice);
+    protected Order addOrUpdate(Order order) {
         return orderRepository.save(order);
-    }
-
-    private OrderItem updatePrice(OrderItem orderItem) {
-        Optional<Product> optionalProduct = productRepository.findById(orderItem.getProduct().getId());
-        if (!optionalProduct.isPresent()) {
-            throw new RuntimeException("Can not find product with ID: " + orderItem.getProduct().getId());
-        }
-        orderItem.setUnitPrice(optionalProduct.get().getPrice());
-        return orderItem;
     }
 
     @Override

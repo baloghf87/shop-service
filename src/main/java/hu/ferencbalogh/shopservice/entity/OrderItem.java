@@ -21,10 +21,6 @@ public class OrderItem {
     @NotNull
     private Integer quantity;
 
-    @ManyToOne
-    @NotNull
-    private Order order;
-
     public OrderItem() {
     }
 
@@ -64,14 +60,6 @@ public class OrderItem {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
     @Override
