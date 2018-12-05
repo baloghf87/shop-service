@@ -2,8 +2,8 @@ package hu.ferencbalogh.shopservice.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -11,7 +11,8 @@ import java.util.Objects;
 @Entity
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "order_item_generator")
+    @SequenceGenerator(name = "product_generator", sequenceName = "product_seq")
     private Integer id;
 
     @NotNull
@@ -24,6 +25,12 @@ public class Product {
     }
 
     public Product(String name, BigDecimal price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public Product(Integer id, String name, BigDecimal price) {
+        this.id = id;
         this.name = name;
         this.price = price;
     }

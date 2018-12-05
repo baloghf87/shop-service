@@ -23,10 +23,7 @@ public class OrderCreatorService {
                 .map(this::createOrderItem)
                 .collect(Collectors.toList());
 
-        Order order = new Order(request.getBuyerEmail(), ZonedDateTime.now(), items);
-        order.calculateTotal();
-
-        return order;
+        return new Order(request.getBuyerEmail(), ZonedDateTime.now(), items);
     }
 
     private OrderItem createOrderItem(CreateOrderRequest.Item item) {

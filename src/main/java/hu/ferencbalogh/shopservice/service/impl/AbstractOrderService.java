@@ -32,10 +32,7 @@ public abstract class AbstractOrderService implements OrderService {
     @Override
     public Order recalculate(int id) {
         Order order = getById(id).orElseThrow(() -> new OrderNotFoundException(id));
-
         order.getItems().forEach(this::updatePrice);
-        order.calculateTotal();
-
         return addOrUpdate(order);
     }
 

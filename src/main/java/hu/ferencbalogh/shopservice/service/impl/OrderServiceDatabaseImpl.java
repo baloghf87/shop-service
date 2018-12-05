@@ -1,7 +1,7 @@
 package hu.ferencbalogh.shopservice.service.impl;
 
 import hu.ferencbalogh.shopservice.Util;
-import hu.ferencbalogh.shopservice.entity.*;
+import hu.ferencbalogh.shopservice.entity.Order;
 import hu.ferencbalogh.shopservice.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

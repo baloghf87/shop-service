@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Integer> {
     List<Order> findByOrderTimeBetween(ZonedDateTime from, ZonedDateTime to);
+
     List<Order> findByOrderTimeGreaterThanEqual(ZonedDateTime date);
-    List<Order> findByOrderTimeLessThan(ZonedDateTime from);
+
+    List<Order> findByOrderTimeLessThan(ZonedDateTime date);
 }

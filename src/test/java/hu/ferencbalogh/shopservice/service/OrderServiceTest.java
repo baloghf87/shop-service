@@ -3,6 +3,7 @@ package hu.ferencbalogh.shopservice.service;
 import hu.ferencbalogh.shopservice.entity.Order;
 import hu.ferencbalogh.shopservice.entity.OrderItem;
 import hu.ferencbalogh.shopservice.entity.Product;
+import hu.ferencbalogh.shopservice.exception.OrderNotFoundException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -116,10 +117,20 @@ public abstract class OrderServiceTest {
 
         assertNotEquals(Arrays.asList(ORDER_1), orderService.list(null, null));
         orderService.recalculate(ORDER_1.getId());
-        ORDER_1.calculateTotal();
 
         //then
         assertEquals(Arrays.asList(ORDER_1), orderService.list(null, null));
+    }
+
+    @Test(expected = OrderNotFoundException.class)
+    public void shouldFailWhenRecalculatingPriceOfANotExistingOrder() {
+        //given
+        assertTrue(orderService.list(null, null).isEmpty());
+
+        //when
+        orderService.recalculate(1);
+
+        //then it should fail
     }
 
     @Test

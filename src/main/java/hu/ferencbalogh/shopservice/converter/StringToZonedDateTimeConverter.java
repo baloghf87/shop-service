@@ -6,10 +6,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -27,7 +24,7 @@ public class StringToZonedDateTimeConverter implements Converter<String, ZonedDa
     private DateTimeFormatter formatter;
 
     @PostConstruct
-    private void initialize() {
+    void initialize() {
         formatter = DateTimeFormatter.ofPattern(dateTimePattern).withZone(defaultTimeZone);
         defaultTimeZone = ZoneId.of(defaultZoneId);
     }
@@ -58,7 +55,8 @@ public class StringToZonedDateTimeConverter implements Converter<String, ZonedDa
 
     private ZonedDateTime parseDateTimeWithoutZone(String value) {
         try {
-            return ZonedDateTime.parse(value, formatter);
+            LocalDateTime localDateTime = LocalDateTime.parse(value, formatter);
+            return ZonedDateTime.of(localDateTime, defaultTimeZone);
         } catch (DateTimeParseException e) {
             return null;
         }

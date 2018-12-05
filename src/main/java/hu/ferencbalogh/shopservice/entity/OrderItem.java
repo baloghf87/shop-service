@@ -8,7 +8,8 @@ import java.util.Objects;
 @Entity
 public class OrderItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "order_item_generator")
+    @SequenceGenerator(name = "order_item_generator", sequenceName = "order_item_seq")
     private Integer id;
 
     @NotNull

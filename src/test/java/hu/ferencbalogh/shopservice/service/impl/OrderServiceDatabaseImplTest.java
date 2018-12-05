@@ -1,7 +1,7 @@
 package hu.ferencbalogh.shopservice.service.impl;
 
-import hu.ferencbalogh.shopservice.repository.OrderRepository;
 import hu.ferencbalogh.shopservice.entity.Order;
+import hu.ferencbalogh.shopservice.repository.OrderRepository;
 import hu.ferencbalogh.shopservice.service.OrderServiceTest;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

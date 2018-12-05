@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 public class CreateOrderRequest {
+    @NotNull
     @Email
     private String buyerEmail;
 
@@ -41,25 +42,32 @@ public class CreateOrderRequest {
     }
 
     public static class Item {
+        @NotNull
         @Min(0)
-        private int productId;
+        private Integer productId;
 
+        @NotNull
         @Min(1)
-        private int quantity;
+        private Integer quantity;
 
-        public int getProductId() {
+        public Item(@NotNull @Min(0) Integer productId, @NotNull @Min(1) Integer quantity) {
+            this.productId = productId;
+            this.quantity = quantity;
+        }
+
+        public Integer getProductId() {
             return productId;
         }
 
-        public void setProductId(int productId) {
+        public void setProductId(Integer productId) {
             this.productId = productId;
         }
 
-        public int getQuantity() {
+        public Integer getQuantity() {
             return quantity;
         }
 
-        public void setQuantity(int quantity) {
+        public void setQuantity(Integer quantity) {
             this.quantity = quantity;
         }
     }

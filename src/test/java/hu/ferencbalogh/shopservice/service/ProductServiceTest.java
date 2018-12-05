@@ -1,6 +1,7 @@
 package hu.ferencbalogh.shopservice.service;
 
 import hu.ferencbalogh.shopservice.entity.Product;
+import hu.ferencbalogh.shopservice.exception.ProductNotFoundException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -66,5 +67,17 @@ public abstract class ProductServiceTest {
         //then
         actualProducts = productService.list();
         assertEquals(products, actualProducts);
+    }
+
+    @Test(expected = ProductNotFoundException.class)
+    public void shouldFailOnUpdatingNotExistingProduct() {
+        //given
+        assertTrue(productService.list().isEmpty());
+
+        //when
+        Product product = new Product("Test product 1", new BigDecimal("12.34"));
+        productService.update(product);
+
+        //then it should fail
     }
 }

@@ -1,7 +1,7 @@
 package hu.ferencbalogh.shopservice.rest;
 
 import hu.ferencbalogh.shopservice.dto.CreateOrderRequest;
-import hu.ferencbalogh.shopservice.entity.Order;
+import hu.ferencbalogh.shopservice.dto.ListOrdersResponse;
 import hu.ferencbalogh.shopservice.service.OrderCreatorService;
 import hu.ferencbalogh.shopservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/order")
@@ -24,9 +25,12 @@ public class OrderController {
     private OrderCreatorService orderCreatorService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<Order>> list(@RequestParam("from") @Nullable ZonedDateTime from,
-                                            @RequestParam("to") @Nullable ZonedDateTime to) {
-        return ResponseEntity.ok(orderService.list(from, to));
+    public ResponseEntity<List<ListOrdersResponse>> list(@RequestParam("from") @Nullable ZonedDateTime from,
+                                                         @RequestParam("to") @Nullable ZonedDateTime to) {
+        List<ListOrdersResponse> orders = orderService.list(from, to).stream()
+                .map(ListOrdersResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(orders);
     }
 
     @PostMapping("/create")
@@ -36,7 +40,8 @@ public class OrderController {
 
     @PostMapping("/{id}/recalculate")
     public ResponseEntity recalculate(@PathVariable("id") int id) {
-        return ResponseEntity.ok(orderService.recalculate(id).getTotal());
+        orderService.recalculate(id);
+        return ResponseEntity.ok().build();
     }
 
 
