@@ -3,6 +3,7 @@ package hu.ferencbalogh.shopservice.rest;
 import hu.ferencbalogh.shopservice.dto.CreateOrderRequest;
 import hu.ferencbalogh.shopservice.dto.CreateProductRequest;
 import hu.ferencbalogh.shopservice.dto.ListOrdersResponse;
+import hu.ferencbalogh.shopservice.dto.UpdateProductRequest;
 import hu.ferencbalogh.shopservice.entity.Product;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,7 +56,12 @@ public abstract class AbstractControllerTest {
     }
 
     protected void updateProduct(Product product) {
-        ResponseEntity responseEntity = restTemplate.postForEntity(baseUrl + "/product/update", product, Object.class);
+        UpdateProductRequest request = new UpdateProductRequest();
+        request.setId(product.getId());
+        request.setName(product.getName());
+        request.setPrice(product.getPrice());
+
+        ResponseEntity responseEntity = restTemplate.postForEntity(baseUrl + "/product/update", request, Object.class);
         assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
     }
 

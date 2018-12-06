@@ -1,17 +1,29 @@
 package hu.ferencbalogh.shopservice.dto;
 
 import hu.ferencbalogh.shopservice.entity.Order;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ApiModel(description = "Class representing an order")
 public class ListOrdersResponse {
+    @ApiModelProperty(notes = "The unique identifier of the order", example = "1")
     private Integer id;
+
+    @ApiModelProperty(notes = "The e-mail address ofd the buyer", example = "test123@gmail.com")
     private String buyerEmail;
+
+    @ApiModelProperty(notes = "The time the order was submitted", example = "2018-12-05T12:05:33.441+01:00")
     private ZonedDateTime orderTime;
+
+    @ApiModelProperty(notes = "The ordered products")
     private List<OrderListItem> items;
+
+    @ApiModelProperty(notes = "The total price of the products", example = "123.45")
     private BigDecimal total;
 
     public ListOrdersResponse() {
@@ -34,10 +46,9 @@ public class ListOrdersResponse {
     }
 
     private void calculateTotal() {
-        total = BigDecimal.ZERO;
-        for (OrderListItem item : items) {
-            total = total.add(item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())));
-        }
+        total = getItems().stream()
+                .map(item -> item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private List<OrderListItem> getItems(Order order) {
@@ -90,10 +101,18 @@ public class ListOrdersResponse {
         this.total = total;
     }
 
+    @ApiModel(description = "Class representing a product in an order")
     public static class OrderListItem {
+        @ApiModelProperty(notes = "The unique identifier of the product", example = "1")
         private Integer id;
+
+        @ApiModelProperty(notes = "The name identifier of the product", example = "USB stick")
         private String name;
+
+        @ApiModelProperty(notes = "The price of the product", example = "123.45")
         private BigDecimal unitPrice;
+
+        @ApiModelProperty(notes = "The ordered quantity", example = "1")
         private Integer quantity;
 
         public OrderListItem() {

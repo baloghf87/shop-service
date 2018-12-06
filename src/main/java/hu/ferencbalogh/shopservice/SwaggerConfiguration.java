@@ -26,10 +26,10 @@ public class SwaggerConfiguration {
                 .build()
                 .apiInfo(new ApiInfo(
                         "Shop-service",
-                        "Trial work for a Java engineer role",
+                        "Trial work for a Java engineer position",
                         "1.0-RELEASE",
                         null,
-                        new Contact("Ferenc Balogh", null, "baloghf87@gmail.com"),
+                        new Contact("Ferenc Balogh", "https://www.linkedin.com/in/ferenc-balogh/", "baloghf87@gmail.com"),
                         null,
                         null,
                         Collections.emptyList()

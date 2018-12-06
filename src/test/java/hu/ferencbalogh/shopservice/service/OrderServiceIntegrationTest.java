@@ -16,7 +16,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public abstract class OrderServiceTest {
+public abstract class OrderServiceIntegrationTest {
     private final Product PRODUCT_1 = new Product("Test product 1", new BigDecimal("1.23"));
     private final Product PRODUCT_2 = new Product("Test product 2", new BigDecimal("2.34"));
     private final Product PRODUCT_3 = new Product("Test product 3", new BigDecimal("3.45"));

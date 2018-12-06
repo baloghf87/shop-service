@@ -6,22 +6,29 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-@ApiModel(description = "Class representing an product to create")
-public class CreateProductRequest {
+@ApiModel(description = "Class representing a product update")
+public class UpdateProductRequest {
     @NotNull
-    @ApiModelProperty(notes = "The name of the product", required = true)
+    @ApiModelProperty(notes = "The unique identifier of the product to update", example = "1")
+    private Integer id;
+
+    @NotNull
+    @ApiModelProperty(notes = "The new name of the product", example = "USB stick")
     private String name;
 
     @NotNull
-    @ApiModelProperty(notes = "The price of the product", required = true)
+    @ApiModelProperty(notes = "The new price of the product", example = "123.45")
     private BigDecimal price;
 
-    public CreateProductRequest() {
+    public UpdateProductRequest() {
     }
 
-    public CreateProductRequest(String name, BigDecimal price) {
-        this.name = name;
-        this.price = price;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

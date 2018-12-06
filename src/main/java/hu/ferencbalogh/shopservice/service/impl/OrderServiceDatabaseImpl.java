@@ -16,7 +16,6 @@ public class OrderServiceDatabaseImpl extends AbstractOrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-
     @Override
     protected Optional<Order> getById(int id) {
         return orderRepository.findById(id);

@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public abstract class ProductServiceTest {
+public abstract class ProductServiceIntegrationTest {
 
     @Autowired
     private ProductService productService;

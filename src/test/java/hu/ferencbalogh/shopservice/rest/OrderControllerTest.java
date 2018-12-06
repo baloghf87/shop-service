@@ -136,7 +136,7 @@ public class OrderControllerTest extends AbstractControllerTest {
             assertEquals(request.getBuyerEmail(), order.getBuyerEmail());
             long diffMs = ChronoUnit.MILLIS.between(order.getOrderTime(), orderCreationStartTime.plus(orderIdx * (DELAY_MS + DELAY_MS / 50), ChronoUnit.MILLIS));
             int maxDiffMs = DELAY_MS / 25;
-            assertTrue(String.format("Difference: %d ms (max. allowed difference: %d ms)", diffMs, maxDiffMs), diffMs < maxDiffMs);
+            assertTrue(String.format("Difference between expected and actual order time: %d ms (max. allowed difference: %d ms)", diffMs, maxDiffMs), diffMs < maxDiffMs);
             assertEquals(request.getItems().size(), order.getItems().size());
             validateItemsAndTotal(request, order);
         }

@@ -35,6 +35,13 @@ public class Order {
         this.items = items;
     }
 
+    public Order(Integer id, String buyerEmail, ZonedDateTime orderTime, List<OrderItem> items) {
+        this.id = id;
+        this.buyerEmail = buyerEmail;
+        this.orderTime = orderTime;
+        this.items = items;
+    }
+
     public Integer getId() {
         return id;
     }
