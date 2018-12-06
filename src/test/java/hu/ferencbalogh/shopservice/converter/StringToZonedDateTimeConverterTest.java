@@ -23,28 +23,65 @@ public class StringToZonedDateTimeConverterTest {
     private StringToZonedDateTimeConverter converter;
 
     @Test
-    public void shouldConvertDateTimeWithTimezone() {
-        ZonedDateTime result = converter.convert("2018-12-05T13:15:30+00:00");
+    public void convertDateTimeWithTimezone() {
+        //given
+        String input = "2018-12-05T13:15:30-00:00";
         ZonedDateTime expectedResult = ZonedDateTime.of(LocalDateTime.of(2018, 12, 5, 13, 15, 30), ZoneId.of("UTC"));
+
+        //when
+        ZonedDateTime result = converter.convert(input);
+
+        //then
         assertTrue(expectedResult.isEqual(result));
     }
 
     @Test
-    public void shouldConvertDateTimeWithoutTimezone() {
-        ZonedDateTime result = converter.convert("2018-12-05TTT13:15:30");
-        ZonedDateTime expectedResult = ZonedDateTime.of(LocalDateTime.of(2018, 12, 5, 13, 15, 30), ZoneId.of("UTC"));
+    public void convertDateTimeWithTimezone2() {
+        //given
+        String input = "2018-12-05T13:15:30+01:00";
+        ZonedDateTime expectedResult = ZonedDateTime.of(LocalDateTime.of(2018, 12, 5, 12, 15, 30), ZoneId.of("UTC"));
+
+        //when
+        ZonedDateTime result = converter.convert(input);
+
+        //then
         assertTrue(expectedResult.isEqual(result));
     }
 
     @Test
-    public void shouldConvertDate() {
-        ZonedDateTime result = converter.convert("2018-12-05");
+    public void convertDateTimeWithoutTimezone() {
+        //given
+        String input = "2018-12-05TTT13:15:30";
+        ZonedDateTime expectedResult = ZonedDateTime.of(LocalDateTime.of(2018, 12, 5, 13, 15, 30), ZoneId.of("UTC"));
+
+        //when
+        ZonedDateTime result = converter.convert(input);
+
+        //then
+        assertTrue(expectedResult.isEqual(result));
+    }
+
+    @Test
+    public void convertDate() {
+        //given
+        String input = "2018-12-05";
         ZonedDateTime expectedResult = ZonedDateTime.of(LocalDate.of(2018, 12, 5), LocalTime.MIDNIGHT, ZoneId.of("UTC"));
+
+        //when
+        ZonedDateTime result = converter.convert(input);
+
+        //then
         assertTrue(expectedResult.isEqual(result));
     }
 
     @Test(expected = DateTimeFormatException.class)
-    public void shouldFailOnInvalidFormat() {
-        converter.convert("this is not good");
+    public void failOnInvalidFormat() {
+        //given
+        String input = "this is not good";
+
+        //when
+        converter.convert(input);
+
+        //then it should fail
     }
 }

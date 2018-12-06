@@ -50,7 +50,10 @@ public class CreateOrderRequest {
         @Min(1)
         private Integer quantity;
 
-        public Item(@NotNull @Min(0) Integer productId, @NotNull @Min(1) Integer quantity) {
+        public Item() {
+        }
+
+        public Item(Integer productId, Integer quantity) {
             this.productId = productId;
             this.quantity = quantity;
         }

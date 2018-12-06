@@ -38,7 +38,7 @@ public class OrderCreatorServiceTest {
     private OrderCreatorService orderCreatorService;
 
     @Test
-    public void shouldCreateOrder() {
+    public void createOrder() {
         List<CreateOrderRequest.Item> items = Arrays.asList(
                 new CreateOrderRequest.Item(1, 1),
                 new CreateOrderRequest.Item(2, 2)
@@ -57,7 +57,7 @@ public class OrderCreatorServiceTest {
     }
 
     @Test(expected = ProductNotFoundException.class)
-    public void shouldFailWhenProductDoesNotExist() {
+    public void failWhenProductDoesNotExist() {
         //given
         CreateOrderRequest request = new CreateOrderRequest("test123@gmail.com", Arrays.asList(
                 new CreateOrderRequest.Item(3, 1)

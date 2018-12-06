@@ -14,12 +14,23 @@ public class ListOrdersResponse {
     private List<Item> items;
     private BigDecimal total;
 
+    public ListOrdersResponse() {
+    }
+
     public ListOrdersResponse(Order order) {
         id = order.getId();
         buyerEmail = order.getBuyerEmail();
         orderTime = order.getOrderTime();
         items = getItems(order);
         calculateTotal();
+    }
+
+    public ListOrdersResponse(Integer id, String buyerEmail, ZonedDateTime orderTime, List<Item> items, BigDecimal total) {
+        this.id = id;
+        this.buyerEmail = buyerEmail;
+        this.orderTime = orderTime;
+        this.items = items;
+        this.total = total;
     }
 
     private void calculateTotal() {
@@ -31,7 +42,9 @@ public class ListOrdersResponse {
 
     private List<Item> getItems(Order order) {
         return order.getItems().stream()
-                .map(orderItem -> new Item(orderItem.getProduct().getName(),
+                .map(orderItem -> new Item(
+                        orderItem.getProduct().getId(),
+                        orderItem.getProduct().getName(),
                         orderItem.getUnitPrice(),
                         orderItem.getQuantity()))
                 .collect(Collectors.toList());
@@ -77,15 +90,28 @@ public class ListOrdersResponse {
         this.total = total;
     }
 
-    private static class Item {
+    public static class Item {
+        private Integer id;
         private String name;
         private BigDecimal unitPrice;
         private Integer quantity;
 
-        public Item(String name, BigDecimal unitPrice, Integer quantity) {
+        public Item() {
+        }
+
+        public Item(Integer id, String name, BigDecimal unitPrice, Integer quantity) {
+            this.id = id;
             this.name = name;
             this.unitPrice = unitPrice;
             this.quantity = quantity;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
         }
 
         public String getName() {
@@ -111,5 +137,25 @@ public class ListOrdersResponse {
         public void setQuantity(Integer quantity) {
             this.quantity = quantity;
         }
+
+        @Override
+        public String toString() {
+            return "Item{" +
+                    "name='" + name + '\'' +
+                    ", unitPrice=" + unitPrice +
+                    ", quantity=" + quantity +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ListOrdersResponse{" +
+                "id=" + id +
+                ", buyerEmail='" + buyerEmail + '\'' +
+                ", orderTime=" + orderTime +
+                ", items=" + items +
+                ", total=" + total +
+                '}';
     }
 }

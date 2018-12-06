@@ -17,7 +17,7 @@ public abstract class ProductServiceTest {
     private ProductService productService;
 
     @Test
-    public void shouldCreateProduct() {
+    public void createProduct() {
         //given
         assertTrue(productService.list().isEmpty());
 
@@ -31,7 +31,7 @@ public abstract class ProductServiceTest {
     }
 
     @Test
-    public void shouldListProducts() {
+    public void listProducts() {
         //given
         assertTrue(productService.list().isEmpty());
         Product product1 = new Product("Test product 1", new BigDecimal("12.34"));
@@ -47,7 +47,7 @@ public abstract class ProductServiceTest {
     }
 
     @Test
-    public void shouldUpdateProduct() {
+    public void updateProduct() {
         //given
         assertTrue(productService.list().isEmpty());
 
@@ -70,7 +70,7 @@ public abstract class ProductServiceTest {
     }
 
     @Test(expected = ProductNotFoundException.class)
-    public void shouldFailOnUpdatingNotExistingProduct() {
+    public void failOnUpdatingNotExistingProduct() {
         //given
         assertTrue(productService.list().isEmpty());
 

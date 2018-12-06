@@ -53,7 +53,7 @@ public abstract class OrderServiceTest {
     private OrderService orderService;
 
     @Test
-    public void shouldAddOrder() {
+    public void addOrder() {
         //given
         assertTrue(productService.list().isEmpty());
         assertTrue(orderService.list(null, null).isEmpty());
@@ -74,7 +74,7 @@ public abstract class OrderServiceTest {
     }
 
     @Test
-    public void shouldChangeProductPricesWithoutAffectingOrderPrices() {
+    public void changeProductPricesWithoutAffectingOrderPrices() {
         //given
         assertTrue(productService.list().isEmpty());
         assertTrue(orderService.list(null, null).isEmpty());
@@ -94,7 +94,7 @@ public abstract class OrderServiceTest {
     }
 
     @Test
-    public void shouldRecalculatePrices() {
+    public void recalculatePrices() {
         //given
         assertTrue(productService.list().isEmpty());
         assertTrue(orderService.list(null, null).isEmpty());
@@ -123,7 +123,7 @@ public abstract class OrderServiceTest {
     }
 
     @Test(expected = OrderNotFoundException.class)
-    public void shouldFailWhenRecalculatingPriceOfANotExistingOrder() {
+    public void failWhenRecalculatingPriceOfANotExistingOrder() {
         //given
         assertTrue(orderService.list(null, null).isEmpty());
 
@@ -134,7 +134,7 @@ public abstract class OrderServiceTest {
     }
 
     @Test
-    public void shouldListOrdersWhenTimeRangeIsSpecified() {
+    public void listOrdersWhenTimeRangeIsSpecified() {
         //given
         assertTrue(productService.list().isEmpty());
         assertTrue(orderService.list(null, null).isEmpty());
@@ -161,7 +161,7 @@ public abstract class OrderServiceTest {
     }
 
     @Test
-    public void shouldListAllOrdersWhenNoTimeRangeIsSpecified() {
+    public void listAllOrdersWhenNoTimeRangeIsSpecified() {
         //given
         assertTrue(productService.list().isEmpty());
         assertTrue(orderService.list(null, null).isEmpty());
@@ -176,7 +176,7 @@ public abstract class OrderServiceTest {
     }
 
     @Test
-    public void shouldListOrdersWhenOnlyUpperTimeLimitIsSpecified() {
+    public void listOrdersWhenOnlyUpperTimeLimitIsSpecified() {
         //given
         assertTrue(productService.list().isEmpty());
         assertTrue(orderService.list(null, null).isEmpty());
@@ -196,7 +196,7 @@ public abstract class OrderServiceTest {
     }
 
     @Test
-    public void shouldListOrdersWhenOnlyLowerTimeLimitIsSpecified() {
+    public void listOrdersWhenOnlyLowerTimeLimitIsSpecified() {
         //given
         assertTrue(productService.list().isEmpty());
         assertTrue(orderService.list(null, null).isEmpty());

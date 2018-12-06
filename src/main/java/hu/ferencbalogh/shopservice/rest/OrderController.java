@@ -2,6 +2,7 @@ package hu.ferencbalogh.shopservice.rest;
 
 import hu.ferencbalogh.shopservice.dto.CreateOrderRequest;
 import hu.ferencbalogh.shopservice.dto.ListOrdersResponse;
+import hu.ferencbalogh.shopservice.entity.Order;
 import hu.ferencbalogh.shopservice.service.OrderCreatorService;
 import hu.ferencbalogh.shopservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,9 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody @Valid CreateOrderRequest createOrderRequest) {
-        return ResponseEntity.ok(orderService.add(orderCreatorService.createOrder(createOrderRequest)).getId());
+        Order order = orderCreatorService.createOrder(createOrderRequest);
+        orderService.add(order);
+        return ResponseEntity.ok(order.getId());
     }
 
     @PostMapping("/{id}/recalculate")
