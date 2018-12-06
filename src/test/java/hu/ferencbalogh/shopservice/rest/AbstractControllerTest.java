@@ -1,6 +1,7 @@
 package hu.ferencbalogh.shopservice.rest;
 
 import hu.ferencbalogh.shopservice.dto.CreateOrderRequest;
+import hu.ferencbalogh.shopservice.dto.CreateProductRequest;
 import hu.ferencbalogh.shopservice.dto.ListOrdersResponse;
 import hu.ferencbalogh.shopservice.entity.Product;
 import org.junit.runner.RunWith;
@@ -59,7 +60,8 @@ public abstract class AbstractControllerTest {
     }
 
     protected void createProduct(Product product) {
-        Integer response = restTemplate.postForObject(baseUrl + "/product/create", product, Integer.class);
+        CreateProductRequest request = new CreateProductRequest(product.getName(), product.getPrice());
+        Integer response = restTemplate.postForObject(baseUrl + "/product/create", request, Integer.class);
         assertNotNull(response);
         product.setId(response);
     }

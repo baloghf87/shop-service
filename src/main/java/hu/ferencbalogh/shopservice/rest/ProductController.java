@@ -1,5 +1,6 @@
 package hu.ferencbalogh.shopservice.rest;
 
+import hu.ferencbalogh.shopservice.dto.CreateProductRequest;
 import hu.ferencbalogh.shopservice.entity.Product;
 import hu.ferencbalogh.shopservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,8 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity create(@RequestBody @Valid Product product) {
+    public ResponseEntity create(@RequestBody @Valid CreateProductRequest request) {
+        Product product = new Product(request.getName(), request.getPrice());
         productService.create(product);
         return ResponseEntity.ok(product.getId());
     }

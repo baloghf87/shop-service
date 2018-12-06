@@ -39,9 +39,9 @@ public class OrderCreatorServiceTest {
 
     @Test
     public void createOrder() {
-        List<CreateOrderRequest.Item> items = Arrays.asList(
-                new CreateOrderRequest.Item(1, 1),
-                new CreateOrderRequest.Item(2, 2)
+        List<CreateOrderRequest.CreateOrderItem> items = Arrays.asList(
+                new CreateOrderRequest.CreateOrderItem(1, 1),
+                new CreateOrderRequest.CreateOrderItem(2, 2)
         );
         CreateOrderRequest request = new CreateOrderRequest("test123@gmail.com", items);
 
@@ -60,7 +60,7 @@ public class OrderCreatorServiceTest {
     public void failWhenProductDoesNotExist() {
         //given
         CreateOrderRequest request = new CreateOrderRequest("test123@gmail.com", Arrays.asList(
-                new CreateOrderRequest.Item(3, 1)
+                new CreateOrderRequest.CreateOrderItem(3, 1)
         ));
 
         //when
@@ -69,7 +69,7 @@ public class OrderCreatorServiceTest {
         //then it should fail
     }
 
-    private Product getProduct(CreateOrderRequest.Item item) {
+    private Product getProduct(CreateOrderRequest.CreateOrderItem item) {
         return PRODUCTS.stream()
                 .filter(product -> product.getId().equals(item.getProductId()))
                 .findFirst()

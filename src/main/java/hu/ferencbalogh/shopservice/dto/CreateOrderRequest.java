@@ -15,12 +15,12 @@ public class CreateOrderRequest {
     @NotNull
     @Size(min = 1)
     @Valid
-    private List<Item> items;
+    private List<CreateOrderItem> items;
 
     public CreateOrderRequest() {
     }
 
-    public CreateOrderRequest(String buyerEmail, List<Item> items) {
+    public CreateOrderRequest(String buyerEmail, List<CreateOrderItem> items) {
         this.buyerEmail = buyerEmail;
         this.items = items;
     }
@@ -33,15 +33,15 @@ public class CreateOrderRequest {
         this.buyerEmail = buyerEmail;
     }
 
-    public List<Item> getItems() {
+    public List<CreateOrderItem> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<CreateOrderItem> items) {
         this.items = items;
     }
 
-    public static class Item {
+    public static class CreateOrderItem {
         @NotNull
         @Min(0)
         private Integer productId;
@@ -50,10 +50,10 @@ public class CreateOrderRequest {
         @Min(1)
         private Integer quantity;
 
-        public Item() {
+        public CreateOrderItem() {
         }
 
-        public Item(Integer productId, Integer quantity) {
+        public CreateOrderItem(Integer productId, Integer quantity) {
             this.productId = productId;
             this.quantity = quantity;
         }

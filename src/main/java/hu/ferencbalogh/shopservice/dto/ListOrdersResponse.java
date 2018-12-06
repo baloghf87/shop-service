@@ -11,7 +11,7 @@ public class ListOrdersResponse {
     private Integer id;
     private String buyerEmail;
     private ZonedDateTime orderTime;
-    private List<Item> items;
+    private List<OrderListItem> items;
     private BigDecimal total;
 
     public ListOrdersResponse() {
@@ -25,7 +25,7 @@ public class ListOrdersResponse {
         calculateTotal();
     }
 
-    public ListOrdersResponse(Integer id, String buyerEmail, ZonedDateTime orderTime, List<Item> items, BigDecimal total) {
+    public ListOrdersResponse(Integer id, String buyerEmail, ZonedDateTime orderTime, List<OrderListItem> items, BigDecimal total) {
         this.id = id;
         this.buyerEmail = buyerEmail;
         this.orderTime = orderTime;
@@ -35,14 +35,14 @@ public class ListOrdersResponse {
 
     private void calculateTotal() {
         total = BigDecimal.ZERO;
-        for (Item item : items) {
+        for (OrderListItem item : items) {
             total = total.add(item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())));
         }
     }
 
-    private List<Item> getItems(Order order) {
+    private List<OrderListItem> getItems(Order order) {
         return order.getItems().stream()
-                .map(orderItem -> new Item(
+                .map(orderItem -> new OrderListItem(
                         orderItem.getProduct().getId(),
                         orderItem.getProduct().getName(),
                         orderItem.getUnitPrice(),
@@ -74,11 +74,11 @@ public class ListOrdersResponse {
         this.orderTime = orderTime;
     }
 
-    public List<Item> getItems() {
+    public List<OrderListItem> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<OrderListItem> items) {
         this.items = items;
     }
 
@@ -90,16 +90,16 @@ public class ListOrdersResponse {
         this.total = total;
     }
 
-    public static class Item {
+    public static class OrderListItem {
         private Integer id;
         private String name;
         private BigDecimal unitPrice;
         private Integer quantity;
 
-        public Item() {
+        public OrderListItem() {
         }
 
-        public Item(Integer id, String name, BigDecimal unitPrice, Integer quantity) {
+        public OrderListItem(Integer id, String name, BigDecimal unitPrice, Integer quantity) {
             this.id = id;
             this.name = name;
             this.unitPrice = unitPrice;

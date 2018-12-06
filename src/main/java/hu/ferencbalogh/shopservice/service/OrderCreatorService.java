@@ -26,7 +26,7 @@ public class OrderCreatorService {
         return new Order(request.getBuyerEmail(), ZonedDateTime.now(), items);
     }
 
-    private OrderItem createOrderItem(CreateOrderRequest.Item item) {
+    private OrderItem createOrderItem(CreateOrderRequest.CreateOrderItem item) {
         Product product = productService.getById(item.getProductId())
                 .orElseThrow(() -> new ProductNotFoundException(item.getProductId()));
 

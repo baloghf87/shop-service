@@ -35,12 +35,12 @@ public class OrderControllerTest extends AbstractControllerTest {
         products.forEach(this::createProduct);
 
         createOrderRequest1 = new CreateOrderRequest("test123@gmail.com", Arrays.asList(
-                new CreateOrderRequest.Item(product1.getId(), 2),
-                new CreateOrderRequest.Item(product2.getId(), 3)));
+                new CreateOrderRequest.CreateOrderItem(product1.getId(), 2),
+                new CreateOrderRequest.CreateOrderItem(product2.getId(), 3)));
         createOrderRequest2 = new CreateOrderRequest("test234@gmail.com", Arrays.asList(
-                new CreateOrderRequest.Item(product2.getId(), 5)));
+                new CreateOrderRequest.CreateOrderItem(product2.getId(), 5)));
         createOrderRequest3 = new CreateOrderRequest("test345@gmail.com", Arrays.asList(
-                new CreateOrderRequest.Item(product1.getId(), 1)));
+                new CreateOrderRequest.CreateOrderItem(product1.getId(), 1)));
         createOrderRequests = Arrays.asList(createOrderRequest1, createOrderRequest2, createOrderRequest3);
 
         orderCreationStartTime = ZonedDateTime.now();
@@ -148,8 +148,8 @@ public class OrderControllerTest extends AbstractControllerTest {
 
         assertEquals(request.getItems().size(), order.getItems().size());
         for (int itemIdx = 0; itemIdx < request.getItems().size(); itemIdx++) {
-            CreateOrderRequest.Item requestItem = request.getItems().get(itemIdx);
-            ListOrdersResponse.Item responseItem = order.getItems().get(itemIdx);
+            CreateOrderRequest.CreateOrderItem requestItem = request.getItems().get(itemIdx);
+            ListOrdersResponse.OrderListItem responseItem = order.getItems().get(itemIdx);
 
             assertEquals(requestItem.getProductId(), responseItem.getId());
             Product product = getProduct(requestItem.getProductId());

@@ -7,7 +7,6 @@ import hu.ferencbalogh.shopservice.service.OrderCreatorService;
 import hu.ferencbalogh.shopservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,8 +25,8 @@ public class OrderController {
     private OrderCreatorService orderCreatorService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<ListOrdersResponse>> list(@RequestParam("from") @Nullable ZonedDateTime from,
-                                                         @RequestParam("to") @Nullable ZonedDateTime to) {
+    public ResponseEntity<List<ListOrdersResponse>> list(@RequestParam(value = "from", required = false) ZonedDateTime from,
+                                                         @RequestParam(value = "to", required = false) ZonedDateTime to) {
         List<ListOrdersResponse> orders = orderService.list(from, to).stream()
                 .map(ListOrdersResponse::new)
                 .collect(Collectors.toList());
