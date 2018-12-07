@@ -26,8 +26,8 @@ public class StringToZonedDateTimeConverter implements Converter<String, ZonedDa
 
     @PostConstruct
     void initialize() {
-        formatter = DateTimeFormatter.ofPattern(dateTimePattern).withZone(defaultTimeZone);
         defaultTimeZone = ZoneId.of(defaultZoneId);
+        formatter = DateTimeFormatter.ofPattern(dateTimePattern).withZone(defaultTimeZone);
     }
 
     @Override
