@@ -40,4 +40,11 @@ public class CreateProductRequest {
         this.price = price;
     }
 
+    @Override
+    public String toString() {
+        return "CreateProductRequest{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

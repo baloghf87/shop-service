@@ -101,6 +101,17 @@ public class ListOrdersResponse {
         this.total = total;
     }
 
+    @Override
+    public String toString() {
+        return "ListOrdersResponse{" +
+                "id=" + id +
+                ", buyerEmail='" + buyerEmail + '\'' +
+                ", orderTime=" + orderTime +
+                ", items=" + items +
+                ", total=" + total +
+                '}';
+    }
+
     @ApiModel(description = "Class representing a product in an order")
     public static class OrderListItem {
         @ApiModelProperty(notes = "The unique identifier of the product", example = "1")
@@ -165,16 +176,5 @@ public class ListOrdersResponse {
                     ", quantity=" + quantity +
                     '}';
         }
-    }
-
-    @Override
-    public String toString() {
-        return "ListOrdersResponse{" +
-                "id=" + id +
-                ", buyerEmail='" + buyerEmail + '\'' +
-                ", orderTime=" + orderTime +
-                ", items=" + items +
-                ", total=" + total +
-                '}';
     }
 }

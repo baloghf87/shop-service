@@ -1,6 +1,7 @@
 package hu.ferencbalogh.shopservice.rest;
 
 import hu.ferencbalogh.shopservice.entity.Product;
+import hu.ferencbalogh.shopservice.exception.ProductNotFoundException;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
@@ -61,7 +62,7 @@ public class ProductControllerTest extends AbstractControllerTest {
         } catch (HttpClientErrorException.BadRequest e) {
             //then
             assertEquals(HttpStatus.BAD_REQUEST.value(), e.getRawStatusCode());
-            assertEquals("Product is not found with ID: 1", e.getResponseBodyAsString());
+            assertEquals(new ProductNotFoundException(product.getId()).getMessage(), e.getResponseBodyAsString());
         }
     }
 }

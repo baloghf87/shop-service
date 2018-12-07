@@ -7,6 +7,8 @@ import hu.ferencbalogh.shopservice.exception.OrderNotFoundException;
 import hu.ferencbalogh.shopservice.exception.ProductNotFoundException;
 import hu.ferencbalogh.shopservice.service.OrderService;
 import hu.ferencbalogh.shopservice.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.ZonedDateTime;
@@ -14,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractOrderService implements OrderService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractOrderService.class);
 
     @Autowired
     private ProductService productService;
@@ -26,11 +30,15 @@ public abstract class AbstractOrderService implements OrderService {
 
     @Override
     public Order add(Order order) {
-        return addOrUpdate(order);
+        LOG.info("Creating order: {}", order);
+        addOrUpdate(order);
+        LOG.info("Order is created with ID {}", order.getId());
+        return order;
     }
 
     @Override
     public Order recalculate(int id) {
+        LOG.info("Recalculating prices of order with ID {}", id);
         Order order = getById(id).orElseThrow(() -> new OrderNotFoundException(id));
         order.getItems().forEach(this::updatePrice);
         return addOrUpdate(order);
@@ -39,7 +47,7 @@ public abstract class AbstractOrderService implements OrderService {
     private OrderItem updatePrice(OrderItem orderItem) {
         Product product = productService.getById(orderItem.getProduct().getId())
                 .orElseThrow(() -> new ProductNotFoundException(orderItem.getProduct().getId()));
-
+        LOG.info("New price of {}: {}", orderItem, product.getPrice());
         orderItem.setUnitPrice(product.getPrice());
         return orderItem;
     }

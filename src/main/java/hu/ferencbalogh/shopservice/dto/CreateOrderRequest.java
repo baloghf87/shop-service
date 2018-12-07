@@ -47,6 +47,14 @@ public class CreateOrderRequest {
         this.items = items;
     }
 
+    @Override
+    public String toString() {
+        return "CreateOrderRequest{" +
+                "buyerEmail='" + buyerEmail + '\'' +
+                ", items=" + items +
+                '}';
+    }
+
     @ApiModel(description = "Class representing an ordered product.")
     public static class CreateOrderItem {
         @NotNull
@@ -81,6 +89,14 @@ public class CreateOrderRequest {
 
         public void setQuantity(Integer quantity) {
             this.quantity = quantity;
+        }
+
+        @Override
+        public String toString() {
+            return "CreateOrderItem{" +
+                    "productId=" + productId +
+                    ", quantity=" + quantity +
+                    '}';
         }
     }
 }

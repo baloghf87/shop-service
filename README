@@ -7,22 +7,23 @@ Usage
 -----
 
 - To build an executable .jar file, use the 'mvn clean package' command.
-- To run the application use the 'mvn spring-boot:run' command.
-  The application will be accessible at: http://localhost:8080
-  Swagger UI will be accessible at: http://localhost:8080/swagger-ui.html
+- To run the application use the 'mvn spring-boot:run' command
+  You can also run the built .jar file with the command 'java -jar target/shop-service-1.0-RELEASE.jar'
+
+  The API will be accessible at: http://localhost:8080/shop-service
+  Swagger UI will be accessible at: http://localhost:8080/shop-service/swagger-ui.html
 
 Notes
 -----
 
 - The REST API accepts date/time values in the following formats:
     1. yyyy-MM-ddTHH:mm:ssZ
-    2. According to the format and timezone configured in application.properties.
-       Default format: yyyy-MM-ddTHH:mm:ss, default timezone: UTC
-    3. yyyy-MM-dd
+    2. yyyy-MM-ddTHH:mm:ss in UTC timezone (this custom format and timezone can be adjusted in application.properties)
+    3. yyyy-MM-dd (in this case time part will be 00:00:00.000)
 
 - One REST API test relies on the timing of the requests: OrderControllerTest verifies the timestamps of orders using
   the timestamps of the requests used to create the orders. It never happened so far, but in theory it can fail on slow
-  machines. In that case increase the constant DELAY_MS in that class.
+  machines. In that case increase the constant called DELAY_MS in that class.
 
 Ferenc Balogh
 baloghf87@gmail.com

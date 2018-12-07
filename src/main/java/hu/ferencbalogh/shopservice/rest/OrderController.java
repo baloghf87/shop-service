@@ -8,6 +8,8 @@ import hu.ferencbalogh.shopservice.service.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/order")
 @Api(description = "Endpoints to manipulate orders")
 public class OrderController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     private OrderService orderService;
@@ -38,6 +42,7 @@ public class OrderController {
     public ResponseEntity<List<ListOrdersResponse>> list(
             @ApiParam(allowEmptyValue = true, value = "Lower time boundary") @RequestParam(value = "from", required = false) ZonedDateTime from,
             @ApiParam(allowEmptyValue = true, value = "Upper time boundary") @RequestParam(value = "to", required = false) ZonedDateTime to) {
+        LOG.info("Listing orders from {} to {}", from, to);
         List<ListOrdersResponse> orders = orderService.list(from, to).stream()
                 .map(ListOrdersResponse::new)
                 .collect(Collectors.toList());
@@ -46,8 +51,9 @@ public class OrderController {
 
     @PostMapping("/create")
     @ApiOperation(value = "Create order", notes = "Returns the unique identifier of the created order")
-    public ResponseEntity<Integer> create(@ApiParam("The order to create") @RequestBody @Valid CreateOrderRequest createOrderRequest) {
-        Order order = orderCreatorService.createOrder(createOrderRequest);
+    public ResponseEntity<Integer> create(@ApiParam("The order to create") @RequestBody @Valid CreateOrderRequest request) {
+        LOG.info("Creating order: {}", request);
+        Order order = orderCreatorService.createOrder(request);
         orderService.add(order);
         return ResponseEntity.ok(order.getId());
     }
@@ -55,6 +61,7 @@ public class OrderController {
     @PostMapping("/{id}/recalculate")
     @ApiOperation("Recalculate prices of an existing order")
     public ResponseEntity recalculate(@ApiParam(value = "The unique identifier of the order", example = "1") @PathVariable("id") int id) {
+        LOG.info("Recalculating prices of order with ID {}", id);
         orderService.recalculate(id);
         return ResponseEntity.ok().build();
     }

@@ -16,6 +16,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * Abstract integration test cases to test implementations of OrderService
+ */
 public abstract class OrderServiceIntegrationTest {
     private final Product PRODUCT_1 = new Product("Test product 1", new BigDecimal("1.23"));
     private final Product PRODUCT_2 = new Product("Test product 2", new BigDecimal("2.34"));

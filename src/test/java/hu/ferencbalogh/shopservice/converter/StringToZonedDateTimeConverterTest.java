@@ -10,12 +10,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.*;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(properties = {
-        "datetime-pattern=yyyy-MM-dd'TTT'HH:mm:ss",
-        "default-timezone=UTC"})
+        "api.datetime.format=yyyy-MM-dd'TTT'HH:mm:ss",
+        "api.datetime.timezone=UTC"})
 @ContextConfiguration(classes = {StringToZonedDateTimeConverter.class})
 public class StringToZonedDateTimeConverterTest {
 
@@ -83,5 +84,29 @@ public class StringToZonedDateTimeConverterTest {
         converter.convert(input);
 
         //then it should fail
+    }
+
+    @Test
+    public void returnNullWhenInputIsEmpty() {
+        //given
+        String input = "";
+
+        //when
+        ZonedDateTime result = converter.convert(input);
+
+        //then
+        assertNull(result);
+    }
+
+    @Test
+    public void returnNullWhenInputIsNull() {
+        //given
+        String input = null;
+
+        //when
+        ZonedDateTime result = converter.convert(input);
+
+        //then
+        assertNull(result);
     }
 }

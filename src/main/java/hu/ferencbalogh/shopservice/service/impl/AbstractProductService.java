@@ -3,17 +3,24 @@ package hu.ferencbalogh.shopservice.service.impl;
 import hu.ferencbalogh.shopservice.entity.Product;
 import hu.ferencbalogh.shopservice.exception.ProductNotFoundException;
 import hu.ferencbalogh.shopservice.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 public abstract class AbstractProductService implements ProductService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractOrderService.class);
 
     public abstract Product addOrUpdate(Product product);
 
     @Override
     public Product create(Product product) {
         product.setId(null);
-        return addOrUpdate(product);
+        LOG.info("Creating product: {}", product);
+        addOrUpdate(product);
+        LOG.info("Product is created with ID {}", product.getId());
+        return product;
     }
 
     @Override
@@ -22,6 +29,7 @@ public abstract class AbstractProductService implements ProductService {
             Optional<Product> optionalProductInDatabase = getById(product.getId());
             if (optionalProductInDatabase.isPresent()) {
                 Product productInDatabase = optionalProductInDatabase.get();
+                LOG.info("Updating product: {} -> {}", productInDatabase, product);
                 productInDatabase.setPrice(product.getPrice());
                 productInDatabase.setName(product.getName());
 

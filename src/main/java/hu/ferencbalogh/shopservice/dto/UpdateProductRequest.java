@@ -47,4 +47,12 @@ public class UpdateProductRequest {
         this.price = price;
     }
 
+    @Override
+    public String toString() {
+        return "UpdateProductRequest{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

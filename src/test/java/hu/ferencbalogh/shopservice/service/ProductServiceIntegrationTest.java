@@ -11,6 +11,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * Abstract integration test cases to test implementations of ProductService
+ */
 public abstract class ProductServiceIntegrationTest {
 
     @Autowired

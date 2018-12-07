@@ -6,6 +6,7 @@ import hu.ferencbalogh.shopservice.dto.ListOrdersResponse;
 import hu.ferencbalogh.shopservice.dto.UpdateProductRequest;
 import hu.ferencbalogh.shopservice.entity.Product;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,10 +35,13 @@ import static org.junit.Assert.assertTrue;
 @AutoConfigureTestDatabase
 public abstract class AbstractControllerTest {
 
-    @Value("${datetime-pattern}")
+    @Autowired
+    private ServletContext servletContext;
+
+    @Value("${api.datetime.format}")
     private String dateFormat;
 
-    @Value("${default-timezone}")
+    @Value("${api.datetime.timezone}")
     private String defaultTimeZone;
 
     protected RestTemplate restTemplate = new RestTemplate();
@@ -52,7 +57,7 @@ public abstract class AbstractControllerTest {
 
     @LocalServerPort
     private void createBaseUrl(int port) {
-        baseUrl = "http://localhost:" + port;
+        baseUrl = "http://localhost:" + port + servletContext.getContextPath();
     }
 
     protected void updateProduct(Product product) {

@@ -4,6 +4,7 @@ import hu.ferencbalogh.shopservice.exception.DateTimeFormatException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.time.*;
@@ -13,10 +14,10 @@ import java.time.format.DateTimeParseException;
 @Component
 public class StringToZonedDateTimeConverter implements Converter<String, ZonedDateTime> {
 
-    @Value("${datetime-pattern}")
+    @Value("${api.datetime.format}")
     private String dateTimePattern;
 
-    @Value("${default-timezone}")
+    @Value("${api.datetime.timezone}")
     private String defaultZoneId;
 
     private ZoneId defaultTimeZone;
@@ -31,6 +32,10 @@ public class StringToZonedDateTimeConverter implements Converter<String, ZonedDa
 
     @Override
     public ZonedDateTime convert(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return null;
+        }
+
         ZonedDateTime result = parseDateTimeWithZone(value);
         if (result == null) {
             result = parseDateTimeWithoutZone(value);

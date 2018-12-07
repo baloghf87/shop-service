@@ -3,7 +3,12 @@ package hu.ferencbalogh.shopservice.rest;
 import hu.ferencbalogh.shopservice.dto.CreateOrderRequest;
 import hu.ferencbalogh.shopservice.dto.ListOrdersResponse;
 import hu.ferencbalogh.shopservice.entity.Product;
+import hu.ferencbalogh.shopservice.exception.OrderNotFoundException;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -15,7 +20,10 @@ import static org.junit.Assert.*;
 
 public class OrderControllerTest extends AbstractControllerTest {
 
-    private static final int DELAY_MS = 2500;
+    private static final Logger LOG = LoggerFactory.getLogger(OrderControllerTest.class);
+
+    private static final int DELAY_MS = 3000;
+    private static final double MAX_ALLOWED_ORDER_TIME_DIFF_PERCENT = 20;
 
     private Product product1;
     private Product product2;
@@ -127,26 +135,50 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertEquals(originalPrice, orders.get(2).getTotal());
     }
 
-    private void validateOrders(List<ListOrdersResponse> orders, CreateOrderRequest... requests) {
-        assertEquals(requests.length, orders.size());
-        for (int orderIdx = 0; orderIdx < requests.length; orderIdx++) {
-            CreateOrderRequest request = requests[orderIdx];
+    @Test
+    public void failWhenRecalculatingPricesOfNotExistingProduct() {
+        //given
+        assertTrue(getAllOrders(null, null).isEmpty());
+        int id = 1;
+
+        try {
+            //when
+            restTemplate.postForEntity(baseUrl + "/order/" + id + "/recalculate", null, Object.class);
+            throw new RuntimeException("It should have been failed");
+        } catch (HttpClientErrorException.BadRequest e) {
+            //then
+            assertEquals(HttpStatus.BAD_REQUEST.value(), e.getRawStatusCode());
+            assertEquals(new OrderNotFoundException(id).getMessage(), e.getResponseBodyAsString());
+        }
+    }
+
+    private void validateOrders(List<ListOrdersResponse> orders, CreateOrderRequest... createRequests) {
+        assertEquals(createRequests.length, orders.size());
+        for (int orderIdx = 0; orderIdx < createRequests.length; orderIdx++) {
+            CreateOrderRequest request = createRequests[orderIdx];
             ListOrdersResponse order = orders.get(orderIdx);
 
             assertEquals(request.getBuyerEmail(), order.getBuyerEmail());
-            long diffMs = ChronoUnit.MILLIS.between(order.getOrderTime(), orderCreationStartTime.plus(orderIdx * (DELAY_MS + DELAY_MS / 50), ChronoUnit.MILLIS));
-            int maxDiffMs = DELAY_MS / 25;
-            assertTrue(String.format("Difference between expected and actual order time: %d ms (max. allowed difference: %d ms)", diffMs, maxDiffMs), diffMs < maxDiffMs);
-            assertEquals(request.getItems().size(), order.getItems().size());
+            validateOrderTime(order, request);
             validateItemsAndTotal(request, order);
         }
     }
 
+    private void validateOrderTime(ListOrdersResponse order, CreateOrderRequest createOrderRequest) {
+        ZonedDateTime orderTime = order.getOrderTime();
+        int requestIdx = createOrderRequests.indexOf(createOrderRequest);
+        assertNotEquals(-1, requestIdx);
+        ZonedDateTime expectedOrderTime = orderCreationStartTime.plus(requestIdx * DELAY_MS, ChronoUnit.MILLIS);
+        long diffMs = Math.abs(ChronoUnit.MILLIS.between(orderTime, expectedOrderTime));
+        long maxDiffMs = Math.round((DELAY_MS * (MAX_ALLOWED_ORDER_TIME_DIFF_PERCENT / 100.0)));
+        assertTrue(String.format("Difference between expected and actual order time: %d ms (max. allowed difference: %d ms)", diffMs, maxDiffMs), diffMs < maxDiffMs);
+    }
+
     private void validateItemsAndTotal(CreateOrderRequest request, ListOrdersResponse order) {
+        assertEquals(request.getItems().size(), order.getItems().size());
+
         BigDecimal requestTotal = BigDecimal.ZERO;
         BigDecimal responseTotal = BigDecimal.ZERO;
-
-        assertEquals(request.getItems().size(), order.getItems().size());
         for (int itemIdx = 0; itemIdx < request.getItems().size(); itemIdx++) {
             CreateOrderRequest.CreateOrderItem requestItem = request.getItems().get(itemIdx);
             ListOrdersResponse.OrderListItem responseItem = order.getItems().get(itemIdx);
@@ -175,6 +207,7 @@ public class OrderControllerTest extends AbstractControllerTest {
 
     private void sleep() {
         try {
+            LOG.info("Sleeping {} ms", DELAY_MS);
             Thread.sleep(DELAY_MS);
         } catch (InterruptedException e) {
             e.printStackTrace();
