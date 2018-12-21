@@ -1,6 +1,7 @@
 package hu.ferencbalogh.shopservice.service;
 
 
+import hu.ferencbalogh.shopservice.MockClock;
 import hu.ferencbalogh.shopservice.dto.CreateOrderRequest;
 import hu.ferencbalogh.shopservice.entity.Order;
 import hu.ferencbalogh.shopservice.entity.OrderItem;
@@ -9,25 +10,31 @@ import hu.ferencbalogh.shopservice.exception.ProductNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.Clock;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {OrderCreatorService.class, OrderCreatorServiceTest.MockProductServiceConfiguration.class})
+@ContextConfiguration(classes = {OrderCreatorService.class,
+        OrderCreatorServiceTest.MockProductServiceConfiguration.class,
+        MockClock.Configuration.class})
+@ActiveProfiles("test")
+@SpringBootTest(properties = {"api.datetime.timezone=UTC"})
 public class OrderCreatorServiceTest {
 
     private static final List<Product> PRODUCTS = Arrays.asList(
@@ -36,6 +43,9 @@ public class OrderCreatorServiceTest {
 
     @Autowired
     private OrderCreatorService orderCreatorService;
+
+    @Autowired
+    private Clock clock;
 
     @Test
     public void createOrder() {
@@ -49,7 +59,7 @@ public class OrderCreatorServiceTest {
 
         assertNull(order.getId());
         assertEquals(request.getBuyerEmail(), order.getBuyerEmail());
-        assertTrue(ChronoUnit.MILLIS.between(ZonedDateTime.now(), order.getOrderTime()) < 100);
+        assertEquals(clock.instant(), order.getOrderTime().toInstant());
         List<OrderItem> expectedOrderItems = items.stream()
                 .map(item -> new OrderItem(getProduct(item), item.getQuantity()))
                 .collect(Collectors.toList());

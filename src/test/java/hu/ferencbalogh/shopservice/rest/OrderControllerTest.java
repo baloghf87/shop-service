@@ -1,5 +1,6 @@
 package hu.ferencbalogh.shopservice.rest;
 
+import hu.ferencbalogh.shopservice.MockClock;
 import hu.ferencbalogh.shopservice.dto.CreateOrderRequest;
 import hu.ferencbalogh.shopservice.dto.ListOrdersResponse;
 import hu.ferencbalogh.shopservice.entity.Product;
@@ -7,10 +8,15 @@ import hu.ferencbalogh.shopservice.exception.OrderNotFoundException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -18,12 +24,13 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+@Import(MockClock.Configuration.class)
+@ActiveProfiles({"test"})
 public class OrderControllerTest extends AbstractControllerTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrderControllerTest.class);
 
     private static final int DELAY_MS = 3000;
-    private static final double MAX_ALLOWED_ORDER_TIME_DIFF_PERCENT = 20;
 
     private Product product1;
     private Product product2;
@@ -35,6 +42,9 @@ public class OrderControllerTest extends AbstractControllerTest {
     private List<CreateOrderRequest> createOrderRequests;
 
     private ZonedDateTime orderCreationStartTime;
+
+    @Autowired
+    private Clock clock;
 
     private void createProductsAndOrders() {
         product1 = new Product("Test product 1", new BigDecimal("12.34"));
@@ -51,15 +61,19 @@ public class OrderControllerTest extends AbstractControllerTest {
                 new CreateOrderRequest.CreateOrderItem(product1.getId(), 1)));
         createOrderRequests = Arrays.asList(createOrderRequest1, createOrderRequest2, createOrderRequest3);
 
-        orderCreationStartTime = ZonedDateTime.now();
+        orderCreationStartTime = clock.instant().atZone(ZoneId.of("UTC"));
         for (int i = 0; i < createOrderRequests.size(); i++) {
             Integer id = createOrder(createOrderRequests.get(i));
             Integer expectedId = i + 1;
             assertEquals(expectedId, id);
             if (i < createOrderRequests.size() - 1) {
-                sleep();
+                offsetClock();
             }
         }
+    }
+
+    private void offsetClock() {
+        ((MockClock) clock).setClock(Clock.fixed(clock.instant().plus(DELAY_MS, ChronoUnit.MILLIS), ZoneId.of("UTC")));
     }
 
     @Test
@@ -169,9 +183,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         int requestIdx = createOrderRequests.indexOf(createOrderRequest);
         assertNotEquals(-1, requestIdx);
         ZonedDateTime expectedOrderTime = orderCreationStartTime.plus(requestIdx * DELAY_MS, ChronoUnit.MILLIS);
-        long diffMs = Math.abs(ChronoUnit.MILLIS.between(orderTime, expectedOrderTime));
-        long maxDiffMs = Math.round((DELAY_MS * (MAX_ALLOWED_ORDER_TIME_DIFF_PERCENT / 100.0)));
-        assertTrue(String.format("Difference between expected and actual order time: %d ms (max. allowed difference: %d ms)", diffMs, maxDiffMs), diffMs < maxDiffMs);
+        assertEquals(expectedOrderTime, orderTime);
     }
 
     private void validateItemsAndTotal(CreateOrderRequest request, ListOrdersResponse order) {
@@ -203,14 +215,5 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .filter(product -> product.getId().equals(productId))
                 .findFirst()
                 .orElse(null);
-    }
-
-    private void sleep() {
-        try {
-            LOG.info("Sleeping {} ms", DELAY_MS);
-            Thread.sleep(DELAY_MS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
