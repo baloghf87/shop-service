@@ -21,9 +21,5 @@ Notes
     2. yyyy-MM-ddTHH:mm:ss in UTC timezone (this custom format and timezone can be adjusted in application.properties)
     3. yyyy-MM-dd (in this case time part will be 00:00:00.000)
 
-- One REST API test relies on the timing of the requests: OrderControllerTest verifies the timestamps of orders using
-  the timestamps of the requests used to create the orders. It never happened so far, but in theory it can fail on slow
-  machines. In that case increase the constant called DELAY_MS in that class.
-
 Ferenc Balogh
 baloghf87@gmail.com
